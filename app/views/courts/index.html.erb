@@ -1,0 +1,18 @@
+<% page_title "Courts and Tribunals" %>
+<% page_class "index-list-page" %>
+
+<div class="organisations-index">
+  <div class="block-1">
+    <div class="inner-block">
+      <div class="content">
+        <ol>
+        <% @courts.each do |court| %>
+          <%= content_tag_for :li, court, class: 'department index-item-plain' do %>
+            <%= link_to court.name, court_path(court), id: court.slug, class: 'department-link' %>
+          <% end %>
+        <% end %>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

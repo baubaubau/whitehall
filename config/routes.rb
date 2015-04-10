@@ -402,6 +402,8 @@ Whitehall::Application.routes.draw do
     get '/placeholder' => 'placeholder#show', as: :placeholder
   end
 
+  resources :courts, only: [:index, :show], path: 'courts-tribunals', localised: true
+
   get 'healthcheck' => 'healthcheck#check'
   get 'healthcheck/overdue' => 'healthcheck#overdue'
 
