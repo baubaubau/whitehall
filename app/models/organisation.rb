@@ -67,6 +67,10 @@ class Organisation < ActiveRecord::Base
             class_name: 'RoleAppointment',
             through: :ministerial_whip_roles,
             source: :role_appointments
+  has_many :judge_roles,
+           class_name: 'JudgeRole',
+           through: :organisation_roles,
+           source: :role
 
   has_many :people, through: :roles
 
@@ -455,6 +459,8 @@ class Organisation < ActiveRecord::Base
   def visible_featured_links_count
     if service_priority_homepage?
       10
+    elsif organisation_type.court?
+      8
     else
       FeaturedLink::DEFAULT_SET_SIZE
     end

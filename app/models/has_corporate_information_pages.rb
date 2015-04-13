@@ -34,4 +34,8 @@ module HasCorporateInformationPages
     @about ||= corporate_information_pages.published.for_slug('about')
   end
 
+  def about_our_services
+    @about_our_services ||= corporate_information_pages.published.for_slug('about-our-services')
+  end
+
 end

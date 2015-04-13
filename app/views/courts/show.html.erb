@@ -2,7 +2,31 @@
 <% page_class "organisations-show" %>
 
 <h1><%= @court.name %></h1>
-<h1>What we do</h1>
-<div class="what-we-do">
-  <%= @court.summary%>
-</div>
+  <% if @court.parent_organisations.any? %>
+    <p class="parent-organisations">
+      Administered by
+      <%=
+        @court.parent_organisations.map { |parent_org|
+          link_to parent_org.name, organisation_path(parent_org)
+        }.to_sentence.html_safe
+      %>
+    </p>
+  <% end %>
+<%= render 'shared/featured_links', links: @court.visible_featured_links %>
+
+<h2>Who we are</h2>
+<%= govspeak_to_html @court.about_us.body %>
+<h2>What we do</h2>
+<%= govspeak_to_html @court.about_our_services.body %>
+<h2>Our people</h2>
+<% @judges.each do |judge| %>
+  <%= judge.current_people.first.name %>
+<% end %>
+<% if @court.home_page_contacts.any? %>
+  <h1 id="org-contacts" class="label"><%= t('organisation.headings.contact', name: @court.display_name) %></h1>
+  <div class="org-contacts">
+    <div class="addresses">
+      <%= render partial: 'contacts/contact', collection: @court.home_page_contacts %>
+    </div>
+  </div>
+<% end %>
