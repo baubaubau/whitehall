@@ -5,10 +5,10 @@ class CourtsController < PublicFacingController
   # before_filter :set_organisation_slimmer_headers, only: [:show]
   skip_before_filter :set_cache_control_headers, only: [:show]
   # before_filter :set_cache_max_age, only: [:show]
-
+  
 
   def index
-    @courts = Organisation.courts
+    @courts = CourtsIndexPresenter.new(Organisation.courts.listable.ordered_by_name_ignoring_prefix)
   end
 
   def show
