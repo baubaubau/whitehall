@@ -60,5 +60,7 @@ FactoryGirl.define do
 
   factory :court, parent: :organisation do
     organisation_type_key :court
+    organisation_logo_type_id { OrganisationLogoType::NoIdentity.id }
+    logo_formatted_name { name }
   end
 end

@@ -31,16 +31,32 @@ class CourtsControllerTest < ActionController::TestCase
   view_test "show is headed and titled with the name of the Court" do
     court = create(:court, name: "High Court")
     get :show, id: court
-    assert_select "h1", text: "High Court"
+    assert_select ".page-header .logo h1 span span", text: "High Court"
     assert_select "title", text: "High Court - GOV.UK"
   end
 
-  view_test "show renders the 'About Us' summary" do
+  view_test "show renders the 'Who We Are' Govspeak block" do
     court = create(:court, name: "High Court")
     about_us = create(:about_corporate_information_page,
-                      summary: "High Court is a pretty high Court",
+                      body: "High Court is a *pretty* high Court",
                       organisation: court)
     get :show, id: court
-    assert_select ".what-we-do", text: "High Court is a pretty high Court"
+    assert_select ".what-we-do .overview", text: "High Court is a pretty high Court"
+  end
+
+  view_test "show renders the 'What We Do' Govspeak block" do
+    court = create(:court, name: "High Court")
+    about_us = create(:about_corporate_information_page,
+                      body: "High Court is a *pretty* high Court",
+                      organisation: court)
+    get :show, id: court
+    assert_select ".what-we-do .overview", text: "High Court is a pretty high Court"
+  end
+
+  view_test "show renders the page without Who We Are or What We Do if they don't exist" do
+    court = create(:court, name: "High Court")
+    get :show, id: court
+    assert_select ".what-we-do", false
+    assert_select ".who-we-are", false
   end
 end

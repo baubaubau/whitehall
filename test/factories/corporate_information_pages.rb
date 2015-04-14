@@ -13,4 +13,8 @@ FactoryGirl.define do
   factory :about_corporate_information_page, parent: :published_corporate_information_page do
     corporate_information_page_type_id CorporateInformationPageType::AboutUs.id
   end
+
+  factory :about_our_services_corporate_information_page, parent: :published_corporate_information_page do
+    corporate_information_page_type_id CorporateInformationPageType::AboutOurServices.id
+  end
 end

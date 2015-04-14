@@ -15,22 +15,26 @@
                 locals: { feature_list: @feature_list,
                           recently_updated: @recently_updated,
                           organisation: @court } %>
-      <section id="who-we-are" class="what-we-do">
-        <div class="content">
-          <h1 class="label"><%= t('organisation.headings.who_we_are') %></h1>
-          <div class="overview">
-            <%= govspeak_to_html @court.about_us.body %>
+      <% if @court.about_us %>
+        <section id="who-we-are" class="what-we-do">
+          <div class="content">
+            <h1 class="label"><%= t('organisation.headings.who_we_are') %></h1>
+            <div class="overview">
+              <%= govspeak_to_html @court.about_us.body %>
+            </div>
           </div>
-        </div>
-      </section>
-      <section id="what-we-do" class="what-we-do">
-        <div class="content">
-          <h1 class="label"><%= t('organisation.headings.what_we_do') %></h1>
-          <div class="overview">
-            <%= govspeak_to_html @court.about_our_services.body %>
+        </section>
+      <% end %>
+      <% if @court.about_our_services %>
+        <section id="what-we-do" class="what-we-do">
+          <div class="content">
+            <h1 class="label"><%= t('organisation.headings.what_we_do') %></h1>
+            <div class="overview">
+              <%= govspeak_to_html @court.about_our_services.body %>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      <% end %>
       <% if @court.social_media_accounts.any? %>
         <div class="social-media">
           <div class="content">
