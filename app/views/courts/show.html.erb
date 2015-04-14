@@ -1,32 +1,93 @@
 <% page_title @court.name %>
-<% page_class "organisations-show" %>
+<% page_class "organisations-show courts-show" %>
 
-<h1><%= @court.name %></h1>
-  <% if @court.parent_organisations.any? %>
-    <p class="parent-organisations">
-      Administered by
-      <%=
-        @court.parent_organisations.map { |parent_org|
-          link_to parent_org.name, organisation_path(parent_org)
-        }.to_sentence.html_safe
-      %>
-    </p>
-  <% end %>
-<%= render 'shared/featured_links', links: @court.visible_featured_links %>
+<%= organisation_wrapper(@court) do %>
 
-<h2>Who we are</h2>
-<%= govspeak_to_html @court.about_us.body %>
-<h2>What we do</h2>
-<%= govspeak_to_html @court.about_our_services.body %>
-<h2>Our people</h2>
-<% @judges.each do |judge| %>
-  <%= judge.current_people.first.name %>
-<% end %>
-<% if @court.home_page_contacts.any? %>
-  <h1 id="org-contacts" class="label"><%= t('organisation.headings.contact', name: @court.display_name) %></h1>
-  <div class="org-contacts">
-    <div class="addresses">
-      <%= render partial: 'contacts/contact', collection: @court.home_page_contacts %>
+  <div class="block-1 headings-block<%= " service-priority" if @court.service_priority_homepage? %>">
+    <div class="inner-block">
+      <%= render 'organisations/header', organisation: @court, show_featured_links: true %>
     </div>
   </div>
+
+  <div class="block-2 <%= "has-social" if @court.social_media_accounts.any? %>">
+    <div class="inner-block">
+      <%#= render partial: 'featured_items',
+                locals: { feature_list: @feature_list,
+                          recently_updated: @recently_updated,
+                          organisation: @court } %>
+      <section id="who-we-are" class="what-we-do">
+        <div class="content">
+          <h1 class="label"><%= t('organisation.headings.who_we_are') %></h1>
+          <div class="overview">
+            <%= govspeak_to_html @court.about_us.body %>
+          </div>
+        </div>
+      </section>
+      <section id="what-we-do" class="what-we-do">
+        <div class="content">
+          <h1 class="label"><%= t('organisation.headings.what_we_do') %></h1>
+          <div class="overview">
+            <%= govspeak_to_html @court.about_our_services.body %>
+          </div>
+        </div>
+      </section>
+      <% if @court.social_media_accounts.any? %>
+        <div class="social-media">
+          <div class="content">
+            <%= render 'shared/social_media_accounts', socialable: @court %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render 'organisations/documents' if (@publications + @announcements).any? %>
+
+  <% if @judges.any? %>
+    <div class="block-9">
+      <div class="inner-block" id="people">
+        <section id="who">
+            <section id="ministers">
+              <h1 class="label"><%= t('organisation.headings.our_people') %></h1>
+              <ul>
+              <% @judges.each_with_index do |role, i| %>
+                <%= render partial: "people/person",
+                           locals: {
+                             person: role.current_person,
+                             roles: @judge_roles.roles_for(role.current_person),
+                             hlevel: "h3",
+                             extra_class: (i % 4 == 0) ? 'clear-person' : ''
+                           } %>
+              <% end %>
+              </ul>
+            </section>
+
+        </section>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="block-10">
+    <div class="inner-block">
+      <div class="contact-wrapper">
+        <% if @court.home_page_contacts.any? %>
+          <h1 id="org-contacts" class="label"><%= t('organisation.headings.contact', name: @court.display_name) %></h1>
+          <div class="org-contacts">
+            <div class="addresses">
+              <%= render partial: 'contacts/contact', collection: @court.home_page_contacts %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @court.live? %>
+        <%= render partial: 'organisations/corporate_information',
+                   locals: { organisation: @court,
+                             show_corporate_reports: true } %>
+      <% end %>
+
+    </div>
+  </div>
+
+
 <% end %>
