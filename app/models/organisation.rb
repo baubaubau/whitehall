@@ -457,10 +457,8 @@ class Organisation < ActiveRecord::Base
   end
 
   def visible_featured_links_count
-    if service_priority_homepage?
+    if service_priority_homepage? or organisation_type.try(:court?)
       10
-    elsif organisation_type.court?
-      8
     else
       FeaturedLink::DEFAULT_SET_SIZE
     end
