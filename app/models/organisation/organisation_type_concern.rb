@@ -28,9 +28,26 @@ module Organisation::OrganisationTypeConcern
       where(organisation_type_key: OrganisationType.allowed_promotional_keys)
     }
 
-    scope :excluding_courts, -> {
-      where.not(organisation_type_key: :court)
+    scope :hmcts_tribunals, -> {
+      @hmcts_id ||= Organisation.where(slug: "hm-courts-and-tribunals-service").ids.first
+      joins(:parent_organisational_relationships).
+        where(organisation_type_key: :tribunal_ndpb).
+        where("organisational_relationships.parent_organisation_id" => @hmcts_id)
     }
+
+    scope :excluding_hmcts_tribunals, -> {
+      @hmcts_id ||= Organisation.where(slug: "hm-courts-and-tribunals-service").ids.first
+      joins("LEFT JOIN organisational_relationships parent_organisational_relationships
+        ON parent_organisational_relationships.child_organisation_id = organisations.id").
+      where("NOT (parent_organisational_relationships.parent_organisation_id = ? AND
+              organisations.organisation_type_key = ?) OR
+              parent_organisational_relationships.child_organisation_id IS NULL",
+              @hmcts_id, :tribunal_ndpb)
+    }
+
+    scope :excluding_courts, -> { where.not(organisation_type_key: :court) }
+
+    scope :excluding_courts_and_tribunals, -> { excluding_courts.excluding_hmcts_tribunals }
   end
 
   def organisation_type_key
