@@ -158,4 +158,15 @@ class OrganisationTypeConcernTest < ActiveSupport::TestCase
     court = create(:court)
     refute court.can_publish_to_publishing_api?
   end
+
+  test "#hmcts_tribunal? should be true if it's an HMCTS tribunal only" do
+    hmcts_tribunal = create(:hmcts_tribunal)
+    tribunal = create(:organisation, organisation_type_key: :tribunal_ndpb)
+    hmcts_child = create(:organisation,
+      parent_organisations: [Organisation.find_by(slug: "hm-courts-and-tribunals-service")])
+
+    assert hmcts_tribunal.hmcts_tribunal?
+    refute tribunal.hmcts_tribunal?
+    refute hmcts_child.hmcts_tribunal?
+  end
 end

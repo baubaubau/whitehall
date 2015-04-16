@@ -8,11 +8,19 @@ class CourtsControllerTest < ActionController::TestCase
     assert_equal [court], assigns(:courts)
   end
 
+  test "index assigns @tribunals as only HMCTS Tribunals" do
+    hmcts_tribunal = create(:hmcts_tribunal)
+    get :index
+    assert_equal [hmcts_tribunal], assigns(:hmcts_tribunals)
+  end
+
   view_test "index links to the courts' show pages" do
     court = create(:court, name: "High Court")
+    hmcts_tribunal = create(:hmcts_tribunal, name: "Lands Chamber")
     get :index
 
     assert_select "a[href=#{court_path(court)}]", text: "High Court"
+    assert_select "a[href=#{court_path(hmcts_tribunal)}]", text: "Lands Chamber"
   end
 
   test "show assigns @court as requested Court" do

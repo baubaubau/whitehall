@@ -5,10 +5,10 @@ class CourtsController < PublicFacingController
   # before_filter :set_organisation_slimmer_headers, only: [:show]
   skip_before_filter :set_cache_control_headers, only: [:show]
   # before_filter :set_cache_max_age, only: [:show]
-  
 
   def index
-    @courts = CourtsIndexPresenter.new(Organisation.courts.listable.ordered_by_name_ignoring_prefix)
+    @courts = Organisation.courts.listable.ordered_by_name_ignoring_prefix
+    @hmcts_tribunals = Organisation.hmcts_tribunals.listable.ordered_by_name_ignoring_prefix
   end
 
   def show
@@ -29,7 +29,7 @@ class CourtsController < PublicFacingController
 
           @topics = @court.topics
           @mainstream_categories = @court.mainstream_categories
-          @judges = judges         
+          @judges = judges
         else
           render action: 'not_live'
         end
