@@ -2,9 +2,9 @@ class CourtsController < PublicFacingController
   include CacheControlHelper
 
   enable_request_formats show: [:atom]
-  # before_filter :set_organisation_slimmer_headers, only: [:show]
+  before_filter :set_court_slimmer_headers, only: [:show]
   skip_before_filter :set_cache_control_headers, only: [:show]
-  # before_filter :set_cache_max_age, only: [:show]
+  before_filter :set_cache_max_age, only: [:show]
 
   def index
     @courts = Organisation.courts.listable.ordered_by_name_ignoring_prefix
@@ -57,5 +57,14 @@ class CourtsController < PublicFacingController
                          includes(:current_people).
                          order("organisation_roles.ordering")
     RolesPresenter.new(roles, view_context)
+  end
+
+  def set_court_slimmer_headers
+    set_slimmer_organisations_header([@court])
+    set_slimmer_page_owner_header(@court)
+  end
+
+  def set_cache_max_age
+    @cache_max_age = 5.minutes
   end
 end
