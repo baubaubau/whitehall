@@ -1,0 +1,72 @@
+.courts-show {
+  .headings-block {
+    padding: $gutter 0;
+    .logo {      
+      @include media(tablet) {
+        float: left;
+        width: $two-thirds;
+      }
+    }
+  }
+
+  .about-us {
+    @include grid-column( 2/3 );
+
+    h2 {
+      @include bold-19;
+    }
+  }
+
+  .social-media-links {
+    @include grid-column( 1/3 );
+  }
+
+  .block {
+    margin-bottom: $gutter;
+
+    .keyline-header {
+      @include heading-36;
+      border-bottom: $gutter-one-sixth solid $black;
+      margin: 0 $gutter-half $gutter-two-thirds;
+    }
+    &.contact-us {
+      h1 {
+        @include heading-27;
+        border-top: $gutter-one-sixth solid $black;
+        border-bottom: 1px solid $border-colour;
+        font-weight: bold;
+        margin: 0 $gutter-half;
+        padding: $gutter-two-thirds 0 $gutter-one-third 0;
+        @include media(tablet) {
+          margin: 0 $gutter-half;
+          padding: $gutter-two-thirds 0;
+        }
+      }
+
+      .postal-address {
+        .content {
+          @extend %contain-floats;
+          padding: $gutter $gutter-half $gutter 0;
+
+          h2 {
+            @include bold-19;
+            margin: 0 $gutter-half;
+          }
+
+          .adr,
+          .email-url-number,
+          .comments {
+            @include grid-column( 1/3 );
+            margin-bottom: $gutter-half;
+          }
+        }
+      }
+    }
+
+    .govspeak {
+      margin-bottom: $gutter;
+    }
+  }
+}
+
+
