@@ -10,10 +10,14 @@
 <section class="block about-block">
   <div class="inner-block floated-children">
     <div class="about-us">
-      <h2 id="about-us" class="label"><%= t('organisation.headings.who_we_are') %></h2>
-      <%= govspeak_to_html @court.about_us.body %>
-      <h2 class="label"><%= t('organisation.headings.what_we_do') %></h2>
-      <%= govspeak_to_html @court.about_our_services.body %>
+      <% if @court.about_us %>
+        <h2 id="about-us" class="label"><%= t('organisation.headings.who_we_are') %></h2>
+        <%= govspeak_to_html @court.about_us.body %>
+      <% end %>
+      <% if @court.about_our_services %>
+        <h2 id="about-our-services" class="label"><%= t('organisation.headings.what_we_do') %></h2>
+        <%= govspeak_to_html @court.about_our_services.body %>
+      <% end %>
     </div>
     <% if @court.social_media_accounts.any? %>
       <aside class="social-media-links">

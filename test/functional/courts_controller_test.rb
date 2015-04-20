@@ -49,16 +49,16 @@ class CourtsControllerTest < ActionController::TestCase
                       body: "High Court is a *pretty* high Court",
                       organisation: court)
     get :show, id: court
-    assert_select ".what-we-do .overview", text: "High Court is a pretty high Court"
+    assert_select ".about-us .govspeak", text: "High Court is a pretty high Court"
   end
 
   view_test "show renders the 'What We Do' Govspeak block" do
     court = create(:court, name: "High Court")
-    about_us = create(:about_corporate_information_page,
-                      body: "High Court is a *pretty* high Court",
-                      organisation: court)
+    about_our_services = create(:about_our_services_corporate_information_page,
+                                body: "High Court offers *many* services",
+                                organisation: court)
     get :show, id: court
-    assert_select ".what-we-do .overview", text: "High Court is a pretty high Court"
+    assert_select ".about-us .govspeak", text: "High Court offers many services"
   end
 
   view_test "show renders the page without Who We Are or What We Do if they don't exist" do
@@ -66,5 +66,44 @@ class CourtsControllerTest < ActionController::TestCase
     get :show, id: court
     assert_select ".what-we-do", false
     assert_select ".who-we-are", false
+  end
+
+  view_test "shows names and roles of judges associated with the Court" do
+    court = create(:court)
+    person = create(:person, title: "Sir", forename: "Joe", surname: "Smith", letters: "QC")
+    judge_role = create(:judge_role, organisations: [court])
+    create(:role_appointment, role: judge_role, person: person)
+
+    get :show, id: court
+
+    assert_select "#people", text: /Sir Joe Smith QC/
+    assert_select "#people", text: /Chief Justice/
+  end
+
+  view_test "shows Social Media accounts for the court" do
+    court = create(:court)
+    create(:social_media_account, socialable: court)
+
+    get :show, id: court
+
+    assert_select ".social-media-links"
+  end
+
+  view_test "shows latest announcements for the court" do
+    court = create(:court)
+    create(:published_news_article, organisations: [court])
+
+    get :show, id: court
+
+    assert_select "#announcements"
+  end
+
+  view_test "shows latest publications for the court" do
+    court = create(:court)
+    create(:published_guidance, organisations: [court])
+
+    get :show, id: court
+
+    assert_select "#publications"
   end
 end
