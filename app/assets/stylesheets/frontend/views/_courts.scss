@@ -1,10 +1,36 @@
 .courts-show {
   .headings-block {
     padding: $gutter 0;
-    .logo {      
+    .logo {
       @include media(tablet) {
         float: left;
         width: $two-thirds;
+      }
+    }
+
+    &.service-priority {
+      @extend %grid-row;
+      .logo {
+        @include grid-column( 1/3 );
+
+        img.organisation-logo-custom {
+          max-width: 100%;
+        }
+      }
+      .heading-extra {
+        @include grid-column( 2/3 );
+        ul {
+          margin: 0;
+          padding: 0;
+        }
+        li a,
+        .see-all{
+          @include bold-24;
+        }
+        .see-all {
+          padding-top: $gutter-one-third;
+          margin-left: 0;
+        }
       }
     }
   }
