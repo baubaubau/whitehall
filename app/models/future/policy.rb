@@ -11,16 +11,14 @@ module Future
       @slug = extract_slug
     end
 
-    def self.all
-      Whitehall.content_register.entries('policy').map {|attrs| new(attrs.to_hash) }
+    def self.find(content_id)
+      if attributes = find_entry(content_id)
+        new(attributes)
+      end
     end
 
-    def self.from_content_ids(content_ids)
-      content_ids.map do |content_id|
-        if match = Whitehall.content_register.entries("policy").find { |p| p["content_id"] == content_id }
-          new(match)
-        end
-      end.compact
+    def self.all
+      entries.map { |attrs| new(attrs) }
     end
 
     def topics
@@ -28,8 +26,21 @@ module Future
     end
 
   private
+
     def extract_slug
       base_path.split('/').last
+    end
+
+    def self.find_entry(content_id)
+      entries.find { |p| p["content_id"] == content_id }
+    end
+
+    def self.entries
+      content_register.entries("policy")
+    end
+
+    def self.content_register
+      @content_register ||= Whitehall.content_register
     end
   end
 end

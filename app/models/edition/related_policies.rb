@@ -41,7 +41,7 @@ module Edition::RelatedPolicies
   end
 
   def policies
-    Future::Policy.from_content_ids(policy_content_ids)
+    policy_content_ids.map { |content_id| Future::Policy.find(content_id) }.compact
   end
 
   def published_related_policies
