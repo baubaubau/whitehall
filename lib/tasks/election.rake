@@ -18,6 +18,20 @@ namespace :election do
     DataHygiene::FuturePolicyTaggingMigrator.new(edition_scope, Logger.new(STDOUT)).migrate!
   end
 
+  desc "Unpublish and redirect all published policies"
+  task :unpublish_policies => :environment do
+    Policy.published.with_translations.includes(:document).find_each do |policy|
+      redirector_url = DataHygiene::OldPolicyRedirectIdentifier.new(policy).redirect_url
+      redirector     = DataHygiene::OldPolicyRedirector.new(policy, redirector_url)
+
+      if redirector.redirect!
+        puts "Policy (#{policy.id}) \"#{policy.title}\" redirected to #{redirector_url}"
+      else
+        puts "Error for Policy (#{policy.id}) - #{redirector.error}"
+      end
+    end
+  end
+
 private
 
   def editable_edition_states
