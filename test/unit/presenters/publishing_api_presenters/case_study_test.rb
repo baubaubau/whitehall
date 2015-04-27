@@ -38,7 +38,8 @@ class PublishingApiPresenters::CaseStudyTest < ActiveSupport::TestCase
         ],
         tags: {
           browse_pages: [],
-          topics: []
+          topics: [],
+          policies: []
         }
       },
       links: {
